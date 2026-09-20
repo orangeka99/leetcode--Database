@@ -1,8 +1,6 @@
 import pandas as pd
 
 def consecutive_numbers(logs: pd.DataFrame) -> pd.DataFrame:
-    block_id = logs['num'].ne(logs['num'].shift().fillna(1)).cumsum()
-    num_mat = logs['num'][logs.groupby(block_id).cumcount() == 2].unique()
-    return pd.DataFrame({'ConsecutiveNums':num_mat})
-
-        
+    s = logs['num']
+    mask = (s == s.shift(1)) & (s == s.shift(2))
+    return pd.DataFrame({'ConsecutiveNums': s[mask].unique()})
