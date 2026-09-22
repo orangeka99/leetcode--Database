@@ -1,5 +1,13 @@
-SELECT d.name AS Department, subq.Employee, subq.Salary
-FROM (SELECT name AS Employee, salary AS Salary, departmentId, DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS gg FROM Employee) AS subq
+WITH Top3Emp AS(
+    SELECT 
+        departmentId,
+        name AS Employee,
+        salary AS Salary,
+        DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS gg
+    FROM Employee
+)
+SELECT d.name AS Department,e.Employee,e.Salary
+FROM Top3Emp As e
 INNER JOIN Department AS d
-ON subq.departmentId = d.id
-WHERE subq.gg <= 3
+ON e.departmentId = d.id
+WHERE e.gg <= 3
