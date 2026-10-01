@@ -1,0 +1,10 @@
+WITH l1 AS (
+SELECT  tiv_2016,
+        COUNT(*) OVER(PARTITION BY lat,lon) AS r1,
+        COUNT(*) OVER(PARTITION BY tiv_2015) AS r2
+FROM Insurance
+)
+
+SELECT ROUND(SUM(tiv_2016),2) AS tiv_2016 FROM l1 
+WHERE r1 < 2
+AND r2 > 1
